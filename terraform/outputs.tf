@@ -17,3 +17,13 @@ output "eks_cluster_name" {
 output "eks_cluster_endpoint" {
   value = module.eks.cluster_endpoint
 }
+
+output "app_ecr_repository_name" {
+  description = "Nome do repositório ECR"
+  value       = aws_ecr_repository.app-ecr-node.name
+}
+
+output "app_ecr_repository_url" {
+  description = "URL do repositório ECR"
+  value       = aws_ecr_repository.app-ecr-node.repository_url
+}
