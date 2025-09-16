@@ -39,5 +39,42 @@ module "eks" {
     vpc-cni = {
       before_compute = true
     }
+    aws-ebs-csi-driver = {
+      service_account_role_arn = aws_iam_role.ebs_csi_role.arn
+    }
   }
+}
+
+resource "aws_iam_role" "ebs_csi_role" {
+  name = "${var.name_prefix}-ebs-csi-role"
+
+  assume_role_policy = data.aws_iam_policy_document.ebs_csi_assume_role.json
+}
+
+data "aws_iam_policy_document" "ebs_csi_assume_role" {
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [module.eks.oidc_provider_arn]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(module.eks.cluster_oidc_issuer_url, "https://", "")}:sub"
+      values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "${replace(module.eks.cluster_oidc_issuer_url, "https://", "")}:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ebs_csi_policy" {
+  role       = aws_iam_role.ebs_csi_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
