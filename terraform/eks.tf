@@ -23,6 +23,13 @@ module "eks" {
       name           = "node-group-1"
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["t3.medium"]
+      
+      metadata_options = {
+        http_endpoint               = "enabled"
+        http_tokens                 = "optional"
+        http_put_response_hop_limit = 2
+        instance_metadata_tags      = "disabled"
+      }
 
       min_size     = 1
       max_size     = 1
