@@ -75,3 +75,47 @@ subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: Group
   name: system:serviceaccounts:jenkins
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-job-runner
+  namespace: jenkins
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/JenkinsJobRunnerECRRole
+  labels:
+    app: jenkins
+    component: job-runner
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: jenkins
+  name: jenkins-job-runner
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jenkins-job-runner
+  namespace: jenkins
+subjects:
+- kind: ServiceAccount
+  name: jenkins-job-runner
+  namespace: jenkins
+roleRef:
+  kind: Role
+  name: jenkins-job-runner
+  apiGroup: rbac.authorization.k8s.io
