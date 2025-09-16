@@ -26,6 +26,7 @@ rules:
   - pods
   - pods/log
   - pods/exec
+  - pods/ephemeralcontainers
   - podpreset
   - poddisruptionbudget
   - persistentvolumes
