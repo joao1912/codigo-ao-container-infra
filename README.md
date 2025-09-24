@@ -11,14 +11,14 @@ Os arquivos estão organizados em duas pastas principais: `terraform` e `k8s`.
 
 
 
-## ⚙️ Tecnologias usadas
+## Tecnologias usadas
 
 - [Terraform](https://www.terraform.io/)  
 - [Kubernetes](https://kubernetes.io/)  
 - Shell / scripts
 
 
-## 📂 Estrutura de pastas
+## Estrutura de pastas
 
     /
     ├── terraform/            # Configurações Terraform
