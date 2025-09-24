@@ -22,7 +22,7 @@ module "eks" {
     one = {
       name           = "node-group-1"
       ami_type       = "AL2023_x86_64_STANDARD"
-      instance_types = ["t3.medium"]
+      instance_types = ["t3.large"]
       
       metadata_options = {
         http_endpoint               = "enabled"
